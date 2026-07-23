@@ -1,4 +1,3 @@
-import React from 'react';
 import { Train, ShieldCheck, AlertCircle } from 'lucide-react';
 
 interface HeaderProps {
