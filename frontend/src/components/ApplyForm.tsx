@@ -48,24 +48,28 @@ const ApplyForm: React.FC = () => {
           pass_type: '', from_station: '', to_station: '', travel_class: '', duration: '', fare_amount: ''
         });
       } else {
-        setError(response.data.message);
+        setError(response.data.message || 'Failed to submit application.');
       }
     } catch (err: any) {
-      // Fallback Demo Mode if Backend is offline
-      const demoAppNo = 'RLY-' + new Date().getFullYear() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-      const demoData = {
-        application_no: demoAppNo,
-        full_name: formData.full_name || 'Demo Applicant',
-        pass_type: formData.pass_type,
-        from_station: formData.from_station,
-        to_station: formData.to_station,
-        travel_class: formData.travel_class,
-        duration: formData.duration,
-        fare_amount: formData.fare_amount,
-        status: 'Under Review'
-      };
-      setIsDemo(true);
-      setSuccessData(demoData);
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
+      } else {
+        // Fallback Demo Mode if Backend is offline
+        const demoAppNo = 'RLY-' + new Date().getFullYear() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+        const demoData = {
+          application_no: demoAppNo,
+          full_name: formData.full_name || 'Demo Applicant',
+          pass_type: formData.pass_type,
+          from_station: formData.from_station,
+          to_station: formData.to_station,
+          travel_class: formData.travel_class,
+          duration: formData.duration,
+          fare_amount: formData.fare_amount,
+          status: 'Under Review'
+        };
+        setIsDemo(true);
+        setSuccessData(demoData);
+      }
     } finally {
       setLoading(false);
     }

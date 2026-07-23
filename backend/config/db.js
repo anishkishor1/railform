@@ -2,12 +2,14 @@ const mysql = require('mysql2/promise');
 
 const host = process.env.MYSQLHOST || process.env.DB_HOST || 'localhost';
 const user = process.env.MYSQLUSER || process.env.DB_USER || 'root';
-const password = process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || '';
-const database = process.env.MYSQLDATABASE || process.env.DB_NAME || 'railform';
+const password = process.env.MYSQLPASSWORD || process.env.MYSQL_ROOT_PASSWORD || process.env.DB_PASSWORD || '';
+const database = process.env.MYSQLDATABASE || process.env.MYSQL_DATABASE || process.env.DB_NAME || 'railform';
 const port = parseInt(process.env.MYSQLPORT || process.env.DB_PORT || '3306', 10);
 
-const poolConfig = (process.env.MYSQL_URL || process.env.DATABASE_URL)
-    ? (process.env.MYSQL_URL || process.env.DATABASE_URL)
+const connectionString = process.env.MYSQL_PUBLIC_URL || process.env.MYSQL_URL || process.env.DATABASE_URL;
+
+const poolConfig = connectionString
+    ? connectionString
     : { host, user, password, database, port, waitForConnections: true, connectionLimit: 10, queueLimit: 0 };
 
 const pool = mysql.createPool(poolConfig);
