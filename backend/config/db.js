@@ -9,8 +9,8 @@ const port = parseInt(process.env.MYSQLPORT || process.env.DB_PORT || '3306', 10
 const connectionString = process.env.MYSQL_PUBLIC_URL || process.env.MYSQL_URL || process.env.DATABASE_URL;
 
 const poolConfig = connectionString
-    ? connectionString
-    : { host, user, password, database, port, waitForConnections: true, connectionLimit: 10, queueLimit: 0 };
+    ? { uri: connectionString, connectTimeout: 5000, waitForConnections: true, connectionLimit: 10 }
+    : { host, user, password, database, port, connectTimeout: 5000, waitForConnections: true, connectionLimit: 10, queueLimit: 0 };
 
 const pool = mysql.createPool(poolConfig);
 
