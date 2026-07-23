@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Railways - Student & Commuter Pass Application Portal</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --navy-blue: #1e3a8a;
+            --railway-blue: #0284c7;
+            --accent-gold: #f59e0b;
+            --accent-gold-hover: #d97706;
+            --bg-slate: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --success-green: #10b981;
+            --danger-red: #ef4444;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.85)), url('images/train1.jpg') center/cover fixed no-repeat, url('https://images.unsplash.com/photo-1532105956626-9569c03602f6?q=80&w=1920') center/cover fixed no-repeat;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.4s ease-in-out;
+        }
+
+        body.bg-tab-apply {
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.85)), url('images/train1.jpg') center/cover fixed no-repeat, url('https://images.unsplash.com/photo-1532105956626-9569c03602f6?q=80&w=1920') center/cover fixed no-repeat;
+        }
+
+        body.bg-tab-track {
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(30, 20, 10, 0.85)), url('images/train2.jpg') center/cover fixed no-repeat, url('https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=1920') center/cover fixed no-repeat;
+        }
+
+        body.bg-tab-records {
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(6, 40, 30, 0.85)), url('images/train3.jpg') center/cover fixed no-repeat, url('https://images.unsplash.com/photo-1515165562839-978bbcf18277?q=80&w=1920') center/cover fixed no-repeat;
+        }
+
+        /* Top Government Header */
+        .top-bar {
+            background: #09122c;
+            color: #94a3b8;
+            padding: 8px 24px;
+            font-size: 0.825rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .top-bar-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            margin-left: 16px;
+            transition: color 0.2s;
+        }
+
+        .top-bar-links a:hover {
+            color: var(--accent-gold);
+        }
+
+        /* Main App Header */
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            color: white;
+            padding: 20px 32px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .brand-title {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .brand-logo {
+            width: 52px;
+            height: 52px;
+            background: radial-gradient(circle, #f59e0b 0%, #d97706 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .brand-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-text p {
+            font-size: 0.85rem;
+            color: #93c5fd;
+        }
+
+        /* Server Status Badge */
+        .db-status-badge {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background-color: var(--success-green);
+            box-shadow: 0 0 8px var(--success-green);
+        }
+
+        .status-dot.offline {
+            background-color: var(--danger-red);
+            box-shadow: 0 0 8px var(--danger-red);
+        }
+
+        /* Main Layout */
+        main {
+            max-width: 1200px;
+            width: 100%;
+            margin: 30px auto;
+            padding: 0 20px;
+            flex: 1;
+        }
+
+        /* Nav Tabs */
+        .tab-nav {
+            display: flex;
+            gap: 12px;
+            background: white;
+            padding: 8px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            background: transparent;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.25s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--navy-blue);
+            background: #f1f5f9;
+        }
+
+        .tab-btn.active {
+            background: var(--navy-blue);
+            color: white;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
+        }
+
+        /* XAMPP Notice Banner */
+        .xampp-notice {
+            background: #fffbebf5;
+            border-left: 4px solid var(--accent-gold);
+            padding: 14px 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .xampp-notice strong {
+            color: #92400e;
+        }
+
+        /* Form Card */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius);
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.4);
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .card-header {
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-header.train-bg-apply {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 58, 138, 0.88)), url('images/train1.jpg') center/cover no-repeat, url('https://images.unsplash.com/photo-1532105956626-9569c03602f6?q=80&w=1200') center/cover no-repeat;
+            color: white;
+            padding: 28px 32px;
+            border-radius: 12px;
+            border-bottom: none;
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header.train-bg-apply h2 {
+            color: #ffffff;
+        }
+
+        .card-header.train-bg-apply h2 i {
+            color: #f59e0b;
+        }
+
+        .card-header.train-bg-apply p {
+            color: #93c5fd;
+        }
+
+        .card-header.train-bg-track {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(180, 83, 9, 0.88)), url('images/train2.jpg') center/cover no-repeat, url('https://images.unsplash.com/photo-1474487548417-781cb71495f3?q=80&w=1200') center/cover no-repeat;
+            color: white;
+            padding: 28px 32px;
+            border-radius: 12px;
+            border-bottom: none;
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header.train-bg-track h2 {
+            color: #ffffff;
+        }
+
+        .card-header.train-bg-track h2 i {
+            color: #fbbf24;
+        }
+
+        .card-header.train-bg-track p {
+            color: #fed7aa;
+        }
+
+        .card-header.train-bg-records {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(4, 120, 87, 0.88)), url('images/train3.jpg') center/cover no-repeat, url('https://images.unsplash.com/photo-1515165562839-978bbcf18277?q=80&w=1200') center/cover no-repeat;
+            color: white;
+            padding: 28px 32px;
+            border-radius: 12px;
+            border-bottom: none;
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-header.train-bg-records h2 {
+            color: #ffffff;
+        }
+
+        .card-header.train-bg-records h2 i {
+            color: #34d399;
+        }
+
+        .card-header.train-bg-records p {
+            color: #a7f3d0;
+        }
+
+        /* Form Sections */
+        .form-section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--navy-blue);
+            margin: 24px 0 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 18px;
+            background: var(--accent-gold);
+            border-radius: 2px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        label span.required {
+            color: var(--danger-red);
+        }
+
+        input, select, textarea {
+            padding: 12px 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.925rem;
+            outline: none;
+            transition: all 0.2s ease;
+            background: #fafafa;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--railway-blue);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.12);
+        }
+
+        /* Dynamic Fare Calculator Box */
+        .fare-calculator-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 1.5px dashed #0284c7;
+            padding: 20px;
+            border-radius: var(--radius);
+            margin: 24px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .fare-info h4 {
+            font-size: 0.95rem;
+            color: #0369a1;
+        }
+
+        .fare-info p {
+            font-size: 0.825rem;
+            color: #0c4a6e;
+        }
+
+        .fare-amount {
+            text-align: right;
+        }
+
+        .fare-amount span.discount {
+            font-size: 0.8rem;
+            color: #047857;
+            background: #d1fae5;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .fare-amount h3 {
+            font-size: 1.8rem;
+            color: var(--navy-blue);
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Action Buttons */
+        .btn-submit {
+            background: linear-gradient(135deg, var(--navy-blue) 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 14px rgba(30, 58, 138, 0.35);
+            transition: all 0.25s ease;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.45);
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: var(--text-dark);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        /* Status Search Box */
+        .search-box {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .search-box input {
+            flex: 1;
+        }
+
+        .search-box button {
+            padding: 12px 24px;
+            background: var(--navy-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Result Display Card */
+        .status-result-card {
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-badge.review { background: #fef3c7; color: #b45309; }
+        .status-badge.approved { background: #d1fae5; color: #047857; }
+        .status-badge.rejected { background: #fee2e2; color: #b91c1c; }
+
+        /* Applications Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: #f1f5f9;
+            color: var(--primary-dark);
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-dark);
+        }
+
+        tr:hover td {
+            background: #f8fafc;
+        }
+
+        /* Modal Application Pass Receipt */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .receipt-card {
+            background: white;
+            width: 100%;
+            max-width: 650px;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            animation: modalSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalSlide {
+            from { transform: translateY(30px) scale(0.95); }
+            to { transform: translateY(0) scale(1); }
+        }
+
+        .receipt-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            color: white;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .receipt-body {
+            padding: 24px;
+            background: #fff;
+        }
+
+        .receipt-pass-box {
+            border: 2px dashed #0284c7;
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0f2fe;
+            font-size: 0.9rem;
+        }
+
+        .receipt-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .receipt-label {
+            color: #0369a1;
+            font-weight: 600;
+        }
+
+        .receipt-value {
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .qr-placeholder {
+            text-align: center;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            display: inline-block;
+        }
+
+        .receipt-footer {
+            padding: 16px 24px;
+            background: #f8fafc;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        /* Toast Notifications */
+        #toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+        }
+
+        .toast {
+            background: var(--primary-dark);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .toast.success { border-left: 4px solid var(--success-green); }
+        .toast.error { border-left: 4px solid var(--danger-red); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            .modal-overlay, .modal-overlay * { visibility: visible; }
+            .modal-overlay { position: absolute; left: 0; top: 0; background: none; }
+            .receipt-footer, .modal-close-btn { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Govt Banner -->
+    <div class="top-bar">
+        <div><i class="fa-solid fa-train-subway"></i> Ministry of Railways | Concession & Pass Management System</div>
+        <div class="top-bar-links">
+            <a href="javascript:void(0)" onclick="checkBackendHealth()"><i class="fa-solid fa-rotate-right"></i> Check Connection</a>
+            <a href="javascript:void(0)"><i class="fa-solid fa-circle-question"></i> Helpdesk</a>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="brand-title">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-train"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>INDIAN RAILWAYS CONCESSION PORTAL</h1>
+                    <p>Student Concession Pass & Commuter Season Ticket Application</p>
+                </div>
+            </div>
+            <div class="db-status-badge" id="dbStatusBadge">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">Checking XAMPP Database...</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- XAMPP Notice Info -->
+        <div class="xampp-notice">
+            <div>
+                <i class="fa-solid fa-database" style="color: #d97706; margin-right: 8px;"></i>
+                <strong>XAMPP Environment Ready:</strong> Apache & MySQL backend automatically configured at <code>backend.php</code> with auto DB creation (`railway_db`).
+            </div>
+            <button class="btn-secondary" style="font-size: 0.8rem;" onclick="checkBackendHealth()">
+                <i class="fa-solid fa-plug"></i> Test Connection
+            </button>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('apply')">
+                <i class="fa-solid fa-pen-to-square"></i> New Pass Application
+            </button>
+            <button class="tab-btn" onclick="switchTab('track')">
+                <i class="fa-solid fa-magnifying-glass"></i> Track Application Status
+            </button>
+            <button class="tab-btn" onclick="switchTab('records')">
+                <i class="fa-solid fa-list-check"></i> View Submissions (Admin)
+            </button>
+        </div>
+
+        <!-- TAB 1: NEW APPLICATION FORM -->
+        <div id="tab-apply" class="tab-content card">
+            <div class="card-header train-bg-apply">
+                <h2><i class="fa-solid fa-id-card"></i> Railway Pass Application Form</h2>
+                <p>Please fill in applicant and travel details accurately. Concession slips require institutional verification.</p>
+            </div>
+
+            <form id="railwayForm" onsubmit="submitForm(event)" style="margin-top: 24px;">
+                <!-- Section 1: Applicant Details -->
+                <div class="form-section-title">1. Applicant Personal Information</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="full_name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="full_name" name="full_name" placeholder="e.g., Kishore Kumar" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dob">Date of Birth <span class="required">*</span></label>
+                        <input type="date" id="dob" name="dob" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender <span class="required">*</span></label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number <span class="required">*</span></label>
+                        <input type="tel" id="mobile" name="mobile" placeholder="10-digit mobile no." pattern="[0-9]{10}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="student@university.edu" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_proof_type">Government ID Type <span class="required">*</span></label>
+                        <select id="id_proof_type" name="id_proof_type" required>
+                            <option value="Aadhaar Card">Aadhaar Card</option>
+                            <option value="Student ID Card">College Student ID</option>
+                            <option value="PAN Card">PAN Card</option>
+                            <option value="Passport">Passport</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_proof_no">ID Proof Number <span class="required">*</span></label>
+                        <input type="text" id="id_proof_no" name="id_proof_no" placeholder="e.g., 1234-5678-9012" required>
+                    </div>
+                </div>
+
+                <!-- Section 2: Educational Institution -->
+                <div class="form-section-title">2. Institution / University Verification</div>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="institution">College / School / University Name <span class="required">*</span></label>
+                        <input type="text" id="institution" name="institution" placeholder="e.g., Government Engineering College / SRM University" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="roll_no">Student Roll No. / Admission No. <span class="required">*</span></label>
+                        <input type="text" id="roll_no" name="roll_no" placeholder="e.g., 2026-CS-042" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="course">Department / Course <span class="required">*</span></label>
+                        <input type="text" id="course" name="course" placeholder="e.g., B.Tech Computer Science" required>
+                    </div>
+                </div>
+
+                <!-- Section 3: Travel Route & Concession -->
+                <div class="form-section-title">3. Travel Route & Pass Details</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="pass_type">Pass / Concession Category <span class="required">*</span></label>
+                        <select id="pass_type" name="pass_type" onchange="calculateFare()" required>
+                            <option value="Student Concession (50%)">Student Concession (50% Off)</option>
+                            <option value="Monthly Season Ticket (MST)">Monthly Season Ticket (MST)</option>
+                            <option value="Quarterly Season Ticket (QST)">Quarterly Season Ticket (QST)</option>
+                            <option value="Senior Citizen Concession">Senior Citizen Concession</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="travel_class">Class of Travel <span class="required">*</span></label>
+                        <select id="travel_class" name="travel_class" onchange="calculateFare()" required>
+                            <option value="Second Class (2S)">Second Class (2S / General)</option>
+                            <option value="First Class (FC)">First Class (FC)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="from_station">From Station (Source) <span class="required">*</span></label>
+                        <input type="text" id="from_station" name="from_station" placeholder="e.g., Chennai Central (MAS)" oninput="calculateFare()" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="to_station">To Station (Destination) <span class="required">*</span></label>
+                        <input type="text" id="to_station" name="to_station" placeholder="e.g., Tambaram (TBM)" oninput="calculateFare()" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="duration">Pass Validity Duration <span class="required">*</span></label>
+                        <select id="duration" name="duration" onchange="calculateFare()" required>
+                            <option value="1 Month">1 Month</option>
+                            <option value="3 Months">3 Months (Quarterly)</option>
+                            <option value="6 Months">6 Months (Half-Yearly)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Dynamic Fare Estimation Box -->
+                <div class="fare-calculator-box">
+                    <div class="fare-info">
+                        <h4><i class="fa-solid fa-calculator"></i> Estimated Pass Fare & Concession</h4>
+                        <p id="fareBreakdown">Standard Fare: ₹600 | Discount Applied: 50% Concession</p>
+                    </div>
+                    <div class="fare-amount">
+                        <span class="discount" id="discountBadge">50% SAVINGS</span>
+                        <h3 id="displayFare">₹300.00</h3>
+                        <input type="hidden" id="fare_amount" name="fare_amount" value="300.00">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <i class="fa-solid fa-paper-plane"></i> Submit Railway Application
+                </button>
+            </form>
+        </div>
+
+        <!-- TAB 2: TRACK APPLICATION -->
+        <div id="tab-track" class="tab-content card" style="display: none;">
+            <div class="card-header train-bg-track">
+                <h2><i class="fa-solid fa-magnifying-glass"></i> Track Application Status</h2>
+                <p>Enter your Application Reference ID (e.g. RLY-2026-XXXXXX), Email Address, or ID Number.</p>
+            </div>
+
+            <div class="search-box" style="margin-top: 24px;">
+                <input type="text" id="trackInput" placeholder="Enter Ref Application No. (e.g., RLY-2026-8A3F9) or Email...">
+                <button onclick="trackApplication()"><i class="fa-solid fa-search"></i> Search Status</button>
+            </div>
+
+            <div class="status-result-card" id="statusResult">
+                <!-- Result populated by JS -->
+            </div>
+        </div>
+
+        <!-- TAB 3: RECORDS VIEW (ADMIN) -->
+        <div id="tab-records" class="tab-content card" style="display: none;">
+            <div class="card-header train-bg-records" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h2><i class="fa-solid fa-database"></i> Database Submissions</h2>
+                    <p>All recorded applications stored in MySQL <code>railform.applications</code> table.</p>
+                </div>
+                <button class="btn-secondary" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);" onclick="loadRecords()"><i class="fa-solid fa-arrows-rotate"></i> Refresh List</button>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>App Reference</th>
+                            <th>Applicant Name</th>
+                            <th>Category</th>
+                            <th>Route</th>
+                            <th>Class</th>
+                            <th>Fare</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recordsTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                                Click refresh or submit a new form to view records.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- PRINTABLE RECEIPT MODAL -->
+    <div class="modal-overlay" id="receiptModal">
+        <div class="receipt-card">
+            <div class="receipt-header">
+                <div>
+                    <h3 style="font-family: 'Outfit'; font-size: 1.2rem;"><i class="fa-solid fa-train"></i> INDIAN RAILWAYS CONCESSION SLIP</h3>
+                    <p style="font-size: 0.8rem; opacity: 0.85;">Official Application Acknowledgement Receipt</p>
+                </div>
+                <button class="modal-close-btn" onclick="closeModal()" style="background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer;">&times;</button>
+            </div>
+
+            <div class="receipt-body">
+                <div class="receipt-pass-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <div>
+                            <span style="font-size: 0.75rem; color: #0284c7; font-weight: 700; text-transform: uppercase;">Reference Number</span>
+                            <h2 style="color: var(--navy-blue); font-family: 'Outfit';" id="modalAppNo">RLY-2026-XXXX</h2>
+                        </div>
+                        <div class="qr-placeholder">
+                            <i class="fa-solid fa-qrcode" style="font-size: 2.5rem; color: var(--primary-dark);"></i>
+                        </div>
+                    </div>
+
+                    <div class="receipt-row">
+                        <span class="receipt-label">Applicant Name:</span>
+                        <span class="receipt-value" id="modalName">-</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Concession Type:</span>
+                        <span class="receipt-value" id="modalPassType">-</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Route:</span>
+                        <span class="receipt-value" id="modalRoute">-</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Class & Validity:</span>
+                        <span class="receipt-value" id="modalClassValidity">-</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Payable Amount:</span>
+                        <span class="receipt-value" style="color: #047857;" id="modalFare">-</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Current Status:</span>
+                        <span class="status-badge review" id="modalStatus">Under Review</span>
+                    </div>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center;">
+                    <i class="fa-solid fa-circle-info"></i> Present this reference acknowledgement along with your student ID at the Railway Concession Counter.
+                </p>
+            </div>
+
+            <div class="receipt-footer">
+                <button class="btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn-submit" style="width: auto; padding: 10px 20px; font-size: 0.9rem;" onclick="window.print()">
+                    <i class="fa-solid fa-print"></i> Print Concession Slip
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <script>
+        const API_URL = (window.location.protocol === 'file:') 
+            ? 'http://localhost/kishoreform/backend.php' 
+            : 'backend.php';
+
+        // Auto Check Backend Health on load
+        window.addEventListener('DOMContentLoaded', () => {
+            calculateFare();
+            checkBackendHealth();
+        });
+
+        // Check backend PHP + MySQL connection
+        async function checkBackendHealth() {
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+
+            try {
+                const response = await fetch(`${API_URL}?action=check_db`);
+                const data = await response.json();
+
+                if (data.success) {
+                    statusDot.className = 'status-dot';
+                    statusText.textContent = 'MySQL Database Connected (railway_db)';
+                } else {
+                    statusDot.className = 'status-dot offline';
+                    statusText.textContent = 'XAMPP Error: ' + data.message;
+                }
+            } catch (err) {
+                statusDot.className = 'status-dot offline';
+                statusText.textContent = 'Backend Offline (Start Apache & MySQL in XAMPP)';
+            }
+        }
+
+        // Tab Navigation
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+
+            document.body.classList.remove('bg-tab-apply', 'bg-tab-track', 'bg-tab-records');
+
+            if (tabId === 'apply') {
+                document.body.classList.add('bg-tab-apply');
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('tab-apply').style.display = 'block';
+            } else if (tabId === 'track') {
+                document.body.classList.add('bg-tab-track');
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('tab-track').style.display = 'block';
+            } else if (tabId === 'records') {
+                document.body.classList.add('bg-tab-records');
+                document.querySelectorAll('.tab-btn')[2].classList.add('active');
+                document.getElementById('tab-records').style.display = 'block';
+                loadRecords();
+            }
+        }
+
+        // Fare Calculation Logic
+        function calculateFare() {
+            const passType = document.getElementById('pass_type').value;
+            const travelClass = document.getElementById('travel_class').value;
+            const duration = document.getElementById('duration').value;
+
+            let baseFare = 600; // Base rate
+
+            if (travelClass.includes('First Class')) {
+                baseFare = 1500;
+            }
+
+            let multiplier = 1;
+            if (duration.includes('3 Months')) multiplier = 2.7;
+            if (duration.includes('6 Months')) multiplier = 5.0;
+
+            let grossFare = baseFare * multiplier;
+            let discountPercent = 0;
+
+            if (passType.includes('50%')) discountPercent = 50;
+            else if (passType.includes('Senior Citizen')) discountPercent = 40;
+            else if (passType.includes('MST')) discountPercent = 20;
+
+            let finalFare = grossFare * ((100 - discountPercent) / 100);
+
+            document.getElementById('displayFare').textContent = `₹${finalFare.toFixed(2)}`;
+            document.getElementById('fare_amount').value = finalFare.toFixed(2);
+            document.getElementById('discountBadge').textContent = `${discountPercent}% CONCESSION`;
+            document.getElementById('fareBreakdown').textContent = `Gross Fare: ₹${grossFare.toFixed(0)} | Concession Discount: ${discountPercent}%`;
+        }
+
+        // Form Submission Handler
+        async function submitForm(event) {
+            event.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing Application...';
+
+            const formData = new FormData(document.getElementById('railwayForm'));
+            formData.append('action', 'submit');
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('Application submitted successfully!', 'success');
+                    openReceiptModal(result.data);
+                    document.getElementById('railwayForm').reset();
+                    calculateFare();
+                } else {
+                    showToast(result.message || 'Submission failed.', 'error');
+                }
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                // Fallback demo mode if running directly on file:// without Apache PHP server
+                const demoAppNo = 'RLY-2026-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+                const demoData = {
+                    application_no: demoAppNo,
+                    full_name: document.getElementById('full_name').value || 'Demo Applicant',
+                    pass_type: document.getElementById('pass_type').value,
+                    from_station: document.getElementById('from_station').value,
+                    to_station: document.getElementById('to_station').value,
+                    travel_class: document.getElementById('travel_class').value,
+                    duration: document.getElementById('duration').value,
+                    fare_amount: document.getElementById('fare_amount').value,
+                    status: 'Under Review'
+                };
+                showToast('Backend offline or PHP not running. Generating local preview pass.', 'error');
+                openReceiptModal(demoData);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Railway Application';
+            }
+        }
+
+        // Track Application
+        async function trackApplication() {
+            const query = document.getElementById('trackInput').value.trim();
+            const resultBox = document.getElementById('statusResult');
+
+            if (!query) {
+                showToast('Please enter an application number or email.', 'error');
+                return;
+            }
+
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = '<p style="color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Searching database...</p>';
+
+            try {
+                const response = await fetch(`${API_URL}?action=track&query=${encodeURIComponent(query)}`);
+                const result = await response.json();
+
+                if (result.success && result.application) {
+                    const app = result.application;
+                    resultBox.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <div>
+                                <span style="font-size: 0.8rem; color: var(--text-muted);">Application No:</span>
+                                <h3 style="color: var(--navy-blue); font-family: 'Outfit';">${app.application_no}</h3>
+                            </div>
+                            <span class="status-badge ${app.status.toLowerCase().includes('approved') ? 'approved' : 'review'}">${app.status}</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-label">Applicant Name:</span>
+                            <span class="receipt-value">${app.full_name}</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-label">Pass Category:</span>
+                            <span class="receipt-value">${app.pass_type}</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-label">Route:</span>
+                            <span class="receipt-value">${app.from_station} ➔ ${app.to_station} (${app.travel_class})</span>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-label">Submitted On:</span>
+                            <span class="receipt-value">${app.created_at}</span>
+                        </div>
+                        <div style="margin-top: 16px;">
+                            <button class="btn-secondary" onclick='openReceiptModal(${JSON.stringify(app)})'><i class="fa-solid fa-receipt"></i> View Concession Slip</button>
+                        </div>
+                    `;
+                } else {
+                    resultBox.innerHTML = `<p style="color: var(--danger-red);"><i class="fa-solid fa-circle-exclamation"></i> ${result.message || 'No record found.'}</p>`;
+                }
+            } catch (err) {
+                resultBox.innerHTML = `<p style="color: var(--danger-red);"><i class="fa-solid fa-triangle-exclamation"></i> Could not connect to backend server. Make sure Apache & XAMPP are running.</p>`;
+            }
+        }
+
+        // Load Submissions in Admin View
+        async function loadRecords() {
+            const tbody = document.getElementById('recordsTableBody');
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;"><i class="fa-solid fa-spinner fa-spin"></i> Loading MySQL records...</td></tr>';
+
+            try {
+                const response = await fetch(`${API_URL}?action=list`);
+                const data = await response.json();
+
+                if (data.success && data.applications && data.applications.length > 0) {
+                    tbody.innerHTML = data.applications.map(app => `
+                        <tr>
+                            <td><strong>${app.application_no}</strong></td>
+                            <td>${app.full_name}</td>
+                            <td>${app.pass_type}</td>
+                            <td>${app.from_station} - ${app.to_station}</td>
+                            <td>${app.travel_class}</td>
+                            <td>₹${parseFloat(app.fare_amount).toFixed(2)}</td>
+                            <td><span class="status-badge review">${app.status}</span></td>
+                            <td>
+                                <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.8rem;" onclick='openReceiptModal(${JSON.stringify(app)})'>
+                                    <i class="fa-solid fa-eye"></i> Slip
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-muted);">No application records found in MySQL database.</td></tr>';
+                }
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--danger-red);">Failed to connect to MySQL via backend.php. Start XAMPP Apache & MySQL.</td></tr>';
+            }
+        }
+
+        // Open Receipt Modal
+        function openReceiptModal(data) {
+            document.getElementById('modalAppNo').textContent = data.application_no || 'RLY-2026-XXXX';
+            document.getElementById('modalName').textContent = data.full_name || '-';
+            document.getElementById('modalPassType').textContent = data.pass_type || '-';
+            document.getElementById('modalRoute').textContent = `${data.from_station} to ${data.to_station}`;
+            document.getElementById('modalClassValidity').textContent = `${data.travel_class} (${data.duration || '1 Month'})`;
+            document.getElementById('modalFare').textContent = `₹${parseFloat(data.fare_amount || 0).toFixed(2)}`;
+            document.getElementById('modalStatus').textContent = data.status || 'Under Review';
+
+            document.getElementById('receiptModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('receiptModal').classList.remove('active');
+        }
+
+        // Toast Helper
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> ${message}`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
