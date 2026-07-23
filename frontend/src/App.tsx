@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import ApplyForm from './components/ApplyForm';
 import TrackStatus from './components/TrackStatus';
