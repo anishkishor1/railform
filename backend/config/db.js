@@ -1,18 +1,33 @@
 const mysql = require('mysql2/promise');
 
-const host = process.env.MYSQLHOST || process.env.DB_HOST || 'localhost';
-const user = process.env.MYSQLUSER || process.env.DB_USER || 'root';
-const password = process.env.MYSQLPASSWORD || process.env.MYSQL_ROOT_PASSWORD || process.env.DB_PASSWORD || '';
-const database = process.env.MYSQLDATABASE || process.env.MYSQL_DATABASE || process.env.DB_NAME || 'railform';
-const port = parseInt(process.env.MYSQLPORT || process.env.DB_PORT || '3306', 10);
-
 const connectionString = process.env.MYSQL_PUBLIC_URL || process.env.MYSQL_URL || process.env.DATABASE_URL;
 
-const poolConfig = connectionString
-    ? { uri: connectionString, connectTimeout: 5000, waitForConnections: true, connectionLimit: 10 }
-    : { host, user, password, database, port, connectTimeout: 5000, waitForConnections: true, connectionLimit: 10, queueLimit: 0 };
+let pool;
 
-const pool = mysql.createPool(poolConfig);
+if (connectionString) {
+    console.log('Connecting to MySQL using Connection String URI');
+    pool = mysql.createPool(connectionString);
+} else {
+    const host = process.env.MYSQLHOST || process.env.DB_HOST || 'localhost';
+    const user = process.env.MYSQLUSER || process.env.DB_USER || 'root';
+    const password = process.env.MYSQLPASSWORD || process.env.MYSQL_ROOT_PASSWORD || process.env.DB_PASSWORD || '';
+    const database = process.env.MYSQLDATABASE || process.env.MYSQL_DATABASE || process.env.DB_NAME || 'railform';
+    const port = parseInt(process.env.MYSQLPORT || process.env.DB_PORT || '3306', 10);
+
+    console.log(`Connecting to MySQL at ${host}:${port}, database: ${database}`);
+
+    pool = mysql.createPool({
+        host,
+        user,
+        password,
+        database,
+        port,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0,
+        connectTimeout: 10000
+    });
+}
 
 async function initDB() {
     try {
