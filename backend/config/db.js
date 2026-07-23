@@ -1,28 +1,19 @@
 const mysql = require('mysql2/promise');
 
-const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'railform',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-});
+const host = process.env.MYSQLHOST || process.env.DB_HOST || 'localhost';
+const user = process.env.MYSQLUSER || process.env.DB_USER || 'root';
+const password = process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || '';
+const database = process.env.MYSQLDATABASE || process.env.DB_NAME || 'railform';
+const port = parseInt(process.env.MYSQLPORT || process.env.DB_PORT || '3306', 10);
+
+const poolConfig = (process.env.MYSQL_URL || process.env.DATABASE_URL)
+    ? (process.env.MYSQL_URL || process.env.DATABASE_URL)
+    : { host, user, password, database, port, waitForConnections: true, connectionLimit: 10, queueLimit: 0 };
+
+const pool = mysql.createPool(poolConfig);
 
 async function initDB() {
     try {
-        // Create database if not exists
-        const connection = await mysql.createConnection({
-            host: process.env.DB_HOST || 'localhost',
-            user: process.env.DB_USER || 'root',
-            password: process.env.DB_PASSWORD || ''
-        });
-        
-        await connection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME || 'railform'}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`);
-        await connection.end();
-
-        // Create table if not exists using the pool
         const tableSql = `
             CREATE TABLE IF NOT EXISTS applications (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -48,9 +39,9 @@ async function initDB() {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         `;
         await pool.query(tableSql);
-        console.log('Database and applications table initialized successfully.');
+        console.log('Database connected and applications table initialized successfully.');
     } catch (error) {
-        console.error('Failed to initialize database:', error.message);
+        console.error('Failed to initialize database table:', error.message);
     }
 }
 
