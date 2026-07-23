@@ -12,7 +12,7 @@ function App() {
   const [dbStatus, setDbStatus] = useState<'online' | 'offline' | 'checking'>('checking');
 
   useEffect(() => {
-    // Check DB status on load
+    // Check DB status on load and periodically every 10s
     const checkDb = async () => {
       try {
         const response = await api.get('/check_db');
@@ -26,6 +26,8 @@ function App() {
       }
     };
     checkDb();
+    const interval = setInterval(checkDb, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
